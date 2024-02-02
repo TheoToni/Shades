@@ -1,6 +1,6 @@
-// Dice.js (or Dice.tsx)
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+
 interface DiceProps {
   // Optional prop to allow passing a specific color if needed
   color?: string;
@@ -32,17 +32,30 @@ const getRandomColor = () => {
 };
 
 const Dice: React.FC<DiceProps> = ({ color }) => {
+  const [showBlackDiv, setShowBlackDiv] = useState(false);
+
   // If a color prop is provided, use it; otherwise, generate a random color
   const diceColor = color || getRandomColor();
 
+  const handleClick = () => {
+    setShowBlackDiv((prev) => !prev); // Toggle the value of showBlackDiv
+  };
+
   return (
     <motion.div
-      className="dice p-5 md:p-10 rounded-md shadow-black"
-      style={{ backgroundColor: diceColor }}
-      whileHover={{ scale: 1.05 }}
+      className="dice p-7 md:p-10 rounded-md shadow-black"
+      style={{
+        background: `linear-gradient(to bottom, rgba(255,255,255,0.2), rgba(0,0,0,0.2)), ${diceColor}`, // Gradient background
+      }}
+      whileHover={{ scale: 1.1 }}
       transition={{ type: "spring", stiffness: 300 }}
+      onClick={handleClick} // Toggle the visibility of the black div when the white div is clicked
     >
-      <div className="w-3 h-3 md:w-6 md:h-6 rounded-full bg-white"></div>
+      <div className="w-4 h-4 md:w-6 md:h-6 rounded-full bg-white flex justify-center items-center">
+        {showBlackDiv && (
+          <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-black"></div>
+        )}
+      </div>
     </motion.div>
   );
 };
